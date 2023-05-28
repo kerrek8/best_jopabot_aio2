@@ -28,7 +28,6 @@ async def weather_now(msg: types.Message):
             f'https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={weather_API}&units=metric&lang=ru'
         )
         data = r.json()
-        print(data)
         temp = round(data['main']['temp'] + 1)
         feels_like = round(data['main']['feels_like'] + 1)
         wind_speed = data['wind']['speed']
