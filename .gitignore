@@ -12,8 +12,15 @@ pyvenv.cfg
 .venv
 pip-selfcheck.json
 
-### dotenv template
+# Environments
 .env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
 
 ### VirtualEnv template
 # Virtualenv
