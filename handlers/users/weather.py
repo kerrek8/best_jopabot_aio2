@@ -1,17 +1,18 @@
 from loader import dp, bot
 from aiogram import types
-import requests
+import json
 from aiogram.types import ReplyKeyboardRemove
 from aiogram.dispatcher.filters import Text
 from keyboards.reply_keyboards.weather_kbf import weather_kb
 import datetime
 import os
-# import asyncio
-# import aiohttp
+import aiohttp
 from dotenv import load_dotenv
 
 load_dotenv()
 weather_API = os.getenv("weather_API")
+
+
 
 
 @dp.message_handler(commands=['weather'])
@@ -24,10 +25,11 @@ async def weather_now(msg: types.Message):
     lat = 60.72411
     lon = 77.58138
     try:
-        r = requests.get(
-            f'https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={weather_API}&units=metric&lang=ru'
-        )
-        data = r.json()
+        async with aiohttp.ClientSession() as session:
+            async with session.get(
+                    f'https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={weather_API}&units=metric&lang=ru') as r:
+                r = await r.text()
+        data = json.loads(r)
         temp = round(data['main']['temp'] + 1)
         feels_like = round(data['main']['feels_like'] + 1)
         wind_speed = data['wind']['speed']
@@ -53,10 +55,11 @@ async def weather_today(msg: types.Message):
     lon = 77.58138
     cnt = 8
     try:
-        r = requests.get(
-            f'https://api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&cnt={cnt}&appid={weather_API}&units=metric&lang=ru'
-        )
-        data = r.json()
+        async with aiohttp.ClientSession() as session:
+            async with session.get(
+                    f'https://api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&cnt={cnt}&appid={weather_API}&units=metric&lang=ru') as r:
+                r = await r.text()
+        data = json.loads(r)
         d = data['list']
         s = f'🌤ПОГОДА НА СЕГОДНЯ🌤\n' \
             f'🌤{d[0]["dt_txt"][8:10] + "-" + d[0]["dt_txt"][5:7] + "-" + d[0]["dt_txt"][0:4]}🌤\n'
@@ -82,10 +85,11 @@ async def weather_today(msg: types.Message):
     lon = 77.58138
     cnt = 16
     try:
-        r = requests.get(
-            f'https://api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&cnt={cnt}&appid={weather_API}&units=metric&lang=ru'
-        )
-        data = r.json()
+        async with aiohttp.ClientSession() as session:
+            async with session.get(
+                    f'https://api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&cnt={cnt}&appid={weather_API}&units=metric&lang=ru') as r:
+                r = await r.text()
+        data = json.loads(r)
         d = data['list']
         day = datetime.datetime.now().strftime('%d')
         while True:
@@ -118,10 +122,11 @@ async def weather_today(msg: types.Message):
     lon = 77.58138
     cnt = 35
     try:
-        r = requests.get(
-            f'https://api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&cnt={cnt}&appid={weather_API}&units=metric&lang=ru'
-        )
-        data = r.json()
+        async with aiohttp.ClientSession() as session:
+            async with session.get(
+                    f'https://api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&cnt={cnt}&appid={weather_API}&units=metric&lang=ru') as r:
+                r = await r.text()
+        data = json.loads(r)
         d = data['list']
         day = datetime.datetime.now().strftime('%d')
         while True:
@@ -154,10 +159,11 @@ async def weather_today(msg: types.Message):
     lon = 77.58138
     cnt = 40
     try:
-        r = requests.get(
-            f'https://api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&cnt={cnt}&appid={weather_API}&units=metric&lang=ru'
-        )
-        data = r.json()
+        async with aiohttp.ClientSession() as session:
+            async with session.get(
+                    f'https://api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&cnt={cnt}&appid={weather_API}&units=metric&lang=ru') as r:
+                r = await r.text()
+        data = json.loads(r)
         d = data['list']
         day = datetime.datetime.now().strftime('%d')
         while True:
@@ -191,10 +197,11 @@ async def weather_all(msg: types.Message):
     lon = 77.58138
     cnt = 40
     try:
-        r = requests.get(
-            f'https://api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&cnt={cnt}&appid={weather_API}&units=metric&lang=ru'
-        )
-        data = r.json()
+        async with aiohttp.ClientSession() as session:
+            async with session.get(
+                    f'https://api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&cnt={cnt}&appid={weather_API}&units=metric&lang=ru') as r:
+                r = await r.text()
+        data = json.loads(r)
         d = data['list']
 
         s = f'🌤ПОГОДА НА 5 ДНЕЙ🌤\n'
