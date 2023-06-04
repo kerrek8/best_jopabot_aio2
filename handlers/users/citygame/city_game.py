@@ -5,13 +5,14 @@ from aiogram.dispatcher import FSMContext
 from states.states import CityGameState
 from aiogram.dispatcher.filters import Text
 
-cities = json.load(open('only_cities.json', encoding='utf-8'))
+cities = json.load(open('E:\\jopabot\\handlers\\users\\citygame\\only_cities.json', encoding='utf-8'))
 used_cities = []
-last_b = ['1']
+last_b = []
 
 
 @dp.message_handler(commands=['city_game'])
 async def city_game(message: types.Message):
+    last_b.append('1')
     await CityGameState.citygamestate.set()
     await bot.send_message(message.chat.id, 'Назовите любой город',
                            reply_markup=types.ReplyKeyboardMarkup(resize_keyboard=True).row(
@@ -40,6 +41,7 @@ async def cancel_city_game(message: types.Message, state: FSMContext):
 
 @dp.message_handler(state=CityGameState.citygamestate)
 async def city_game_handler(message: types.Message, state: FSMContext):
+
     city = str(message.text).strip().lower()
     f_b = city[0]
     if last_b[-1] not in 'ёйцукенгшщзхъфывапролджэячсмитьбю':
