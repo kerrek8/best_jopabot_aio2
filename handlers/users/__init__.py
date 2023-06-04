@@ -7,3 +7,5 @@ from . import game
 from . import jokes
 from . import sovmestimost
 from . import call_to_group
+from . import restart
+from . import citygame

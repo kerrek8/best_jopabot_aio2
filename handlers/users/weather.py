@@ -13,8 +13,6 @@ load_dotenv()
 weather_API = os.getenv("weather_API")
 
 
-
-
 @dp.message_handler(commands=['weather'])
 async def weather(msg: types.Message):
     await bot.send_message(msg.chat.id, 'Выберите интересующую вас опцию', reply_markup=weather_kb)

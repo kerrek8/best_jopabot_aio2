@@ -17,3 +17,8 @@ class compitability:
 
 class WaitToCall(StatesGroup):
     callhandlerstate = State()
+
+
+class CityGameState(StatesGroup):
+    citygamestate = State()
+    bottyrn = State()

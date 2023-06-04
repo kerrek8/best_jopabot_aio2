@@ -10,6 +10,7 @@ async def set_default_commands(dp):
             types.BotCommand("dubai", 'показать дубай'),
             types.BotCommand("cat", "специально для Полины"),
             types.BotCommand("game", "игры"),
+            types.BotCommand("city_game", "игра в города"),
             types.BotCommand('mute', 'хихихиха'),
             types.BotCommand('sovmestimost', 'совместимость знаков зодиака')
         ]
