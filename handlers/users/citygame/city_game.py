@@ -10,16 +10,16 @@ used_cities = []
 last_b = []
 
 
-@dp.message_handler(commands=['city_game'])
+@dp.message_handler(commands=['city_game'], state='*')
 async def city_game(message: types.Message):
     last_b.append('1')
     await CityGameState.citygamestate.set()
     await bot.send_message(message.chat.id, 'Назовите любой город',
                            reply_markup=types.ReplyKeyboardMarkup(resize_keyboard=True).row(
-                               types.KeyboardButton('\U00002063Отмена')))
+                               types.KeyboardButton('Отмена')))
 
 
-@dp.message_handler(Text(equals='\U00002063Отмена'), state=CityGameState.citygamestate)
+@dp.message_handler(Text(equals='Отмена'), state=CityGameState.citygamestate)
 async def cancel_city_game(message: types.Message, state: FSMContext):
     used_cities.clear()
     last_b.clear()
@@ -27,21 +27,8 @@ async def cancel_city_game(message: types.Message, state: FSMContext):
     await bot.send_message(message.chat.id, 'Ты проиграл!', reply_markup=types.ReplyKeyboardRemove())
 
 
-# async def correct_sity(city: str, l_b: str):
-#     f_b = city[0]
-#     if city not in cities[f_b]:
-#         await False
-#     elif city in used_cities:
-#         return False
-#     elif f_b != l_b:
-#         return False
-#     else:
-#         return True
-
-
 @dp.message_handler(state=CityGameState.citygamestate)
 async def city_game_handler(message: types.Message, state: FSMContext):
-
     city = str(message.text).strip().lower()
     f_b = city[0]
     if last_b[-1] not in 'ёйцукенгшщзхъфывапролджэячсмитьбю':
@@ -82,8 +69,14 @@ async def city_game_handler(message: types.Message, state: FSMContext):
                 used_cities.append(i)
                 break
         if len(bot_city) != 1:
-            await bot.send_message(message.chat.id, bot_city)
-            last_b.append(bot_city[-1])
+            post_for_u = -1
+            while True:
+                if bot_city[post_for_u] not in cities.keys():
+                    post_for_u -= 1
+                else:
+                    break
+            last_b.append(bot_city[post_for_u])
+            await bot.send_message(message.chat.id, bot_city + '\nВам на букву: ' + bot_city[post_for_u])
         else:
             await state.finish()
             used_cities.clear()
