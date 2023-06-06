@@ -7,7 +7,7 @@ from aiogram.dispatcher.filters import Text
 
 cities = json.load(open('E:\\jopabot\\handlers\\users\\citygame\\only_cities.json', encoding='utf-8'))
 used_cities = []
-last_b = []
+last_b = ['a']
 
 
 @dp.message_handler(commands=['city_game'], state='*')
@@ -16,7 +16,25 @@ async def city_game(message: types.Message):
     await CityGameState.citygamestate.set()
     await bot.send_message(message.chat.id, 'Назовите любой город',
                            reply_markup=types.ReplyKeyboardMarkup(resize_keyboard=True).row(
+                               types.KeyboardButton('Подсказка')).row(
                                types.KeyboardButton('Отмена')))
+
+
+@dp.message_handler(Text(equals='Подсказка'), state=CityGameState.citygamestate)
+async def help_city_game(message: types.Message, state: FSMContext):
+    try:
+        for i in cities[last_b[-1]]:
+            if i not in used_cities:
+                await bot.send_message(message.chat.id, 'попробуй: ' + f'<b>{i}</b>', parse_mode='html')
+                break
+            else:
+                await bot.send_message(message.chat.id,
+                                       'Похоже городов на эту букву не осталось...\n' + 'Ты проиграл получается\n' +
+                                       'Чтобы выйти из игры, нажми, или напиши <b>отмена</b>',
+                                       parse_mode='html')
+                break
+    except:
+        await bot.send_message(message.chat.id, 'Первый город назови уж сам')
 
 
 @dp.message_handler(Text(equals='Отмена'), state=CityGameState.citygamestate)
@@ -24,7 +42,7 @@ async def cancel_city_game(message: types.Message, state: FSMContext):
     used_cities.clear()
     last_b.clear()
     await state.finish()
-    await bot.send_message(message.chat.id, 'Ты проиграл!', reply_markup=types.ReplyKeyboardRemove())
+    await message.reply('🤡Хаха, я выиграл, БОТ ЁБАНЫЙ🤡', reply_markup=types.ReplyKeyboardRemove())
 
 
 @dp.message_handler(state=CityGameState.citygamestate)
@@ -38,22 +56,17 @@ async def city_game_handler(message: types.Message, state: FSMContext):
     if f_b not in cities.keys():
         a = False
         err = 2
-        print(2)
     elif city not in cities[f_b]:
         a = False
         err = 3
-        print(3)
     elif city in used_cities:
         a = False
         err = 4
-        print(4)
     elif f_b != last_b[-1]:
         a = False
         err = 5
-        print(5)
     else:
         a = True
-        print(6)
     if a:
         used_cities.append(city)
         l_b = -1
