@@ -9,3 +9,5 @@ from . import sovmestimost
 from . import call_to_group
 from . import restart
 from . import citygame
+from . import kraken
+from . import lightning_calculator
